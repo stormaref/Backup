@@ -1,8 +1,6 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace AngularAppWeb.Models
 {
@@ -29,7 +27,7 @@ namespace AngularAppWeb.Models
         {
             lock (Users)
             {
-                var current = Users.SingleOrDefault(u => u.ConnectionId == connectionId);
+                User current = Users.SingleOrDefault(u => u.ConnectionId == connectionId);
 
                 if (current == default(User))
                 {
