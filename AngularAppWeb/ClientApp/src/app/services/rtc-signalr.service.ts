@@ -80,9 +80,9 @@ export class RtcSignalRService {
 
   constructor() {
     this._hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl('./sgr/rtc')
-      .configureLogging(signalR.LogLevel.Debug)
-      .build();
+        .withUrl('./sgr/rtc')
+        .configureLogging(signalR.LogLevel.Debug)
+        .build();
 
     (async () => {
       try {
@@ -223,14 +223,15 @@ export class RtcSignalRService {
   }
 
   private async sendSignal(message: ISignal, partnerClientId: string) {
-    await this._hubConnection.invoke('SendSignal', JSON.stringify(message), partnerClientId);
+      await this._hubConnection.invoke('SendSignal', JSON.stringify(message), partnerClientId);
+      console.error(message.candidate + "****" + message.sdp + "****" + message.type);
   }
 
   private async newSignal(user: IUser, data: string) {
     const partnerClientId = user.connectionId;
     const signal: ISignal = JSON.parse(data);
 
-    console.log('WebRTC: received signal');
+      console.error('WebRTC: received signal for//' + this.currentConnectionId + data);
 
     if (signal.type === SignalType.newIceCandidate) {
       await this.receivedNewIceCandidate(partnerClientId, signal.candidate);

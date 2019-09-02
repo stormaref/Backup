@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace AngularAppWeb
 {
@@ -20,15 +21,20 @@ namespace AngularAppWeb
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSwaggerGen(c => c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" }));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-
+            services.AddHttpContextAccessor();
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/dist/angular-app";
             });
-
             services.AddSignalR();
+            services.Configure<IISOptions>(option =>
+            {
+                option.AutomaticAuthentication = false;
+                option.ForwardClientCertificate = false;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,6 +49,9 @@ namespace AngularAppWeb
                 app.UseExceptionHandler("/Error");
                 app.UseHttpsRedirection();
             }
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1"); });
 
             app.UseSignalR(routes =>
             {
@@ -74,7 +83,7 @@ namespace AngularAppWeb
                 }
             });
 
-//            SSHUtil.RemoveAllUsers();
+            //            SSHUtil.RemoveAllUsers();
         }
     }
 }

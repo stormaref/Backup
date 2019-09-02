@@ -5,7 +5,7 @@ namespace AngularAppWeb.Models
 {
     public class Room
     {
-        private static readonly List<Room> Rooms = new List<Room>();
+        public static readonly List<Room> Rooms = new List<Room>();
 
         public string Name { get; set; }
         public List<User> Users { get; set; } = new List<User>();

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.SignalR.Client;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,12 +7,13 @@ namespace AngularAppWeb.Models
 {
     public class User
     {
-        private static readonly List<User> Users = new List<User>();
+        public static readonly List<User> Users = new List<User>();
 
         public string UserName { get; set; }
         public string ConnectionId { get; set; }
         [JsonIgnore]
         public Room CurrentRoom { get; set; }
+        public Status Status { get; set; }
 
         public static void Remove(User user)
         {
@@ -34,7 +36,8 @@ namespace AngularAppWeb.Models
                     current = new User
                     {
                         UserName = userName,
-                        ConnectionId = connectionId
+                        ConnectionId = connectionId,
+                        Status = Status.Available
                     };
                     Users.Add(current);
                 }
@@ -46,5 +49,12 @@ namespace AngularAppWeb.Models
                 return current;
             }
         }
+
+        public static User ChangeConnectionId(string connectionId, User user)
+        {
+            Users.SingleOrDefault(u => u.UserName == user.UserName).ConnectionId = connectionId;
+            return Users.SingleOrDefault(u => u.UserName == user.UserName);
+        }
     }
+    public enum Status { Busy, Available }
 }
